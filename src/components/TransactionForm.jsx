@@ -15,12 +15,16 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { categoryList } from "../utils/constants";
+import { createTransaction } from "../api";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from "react-toastify";
 
-const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
+const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
   const [transactionType, setTransactionType] = useState(null);
   const [transactionDate, setTransactionDate] = useState(null);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     amount: "",
     category: "",
@@ -28,27 +32,6 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
     description: "",
     date: transactionDate,
   });
-
-  const categoryList = [
-    "Housing",
-    "Food",
-    "Transportation",
-    "Entertainment",
-    "Utilities",
-    "Others",
-  ];
-
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    onAdd({ ...form, amount: parseFloat(form.amount) });
-    await setForm((prev) => ({ ...prev, amount: "", category: "" }));
-    await resetForm();
-    await setIsModalOpen(false);
-  };
 
   const resetForm = () => {
     setForm({
@@ -60,6 +43,37 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
     });
     setTransactionDate(null);
     setTransactionType(null);
+    setError("");
+  };
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createTransaction,
+    onSuccess: (responseData) => {
+      queryClient.invalidateQueries(["transactions"]);
+      toast.success(responseData?.message)
+      setIsModalOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      console.error(error)
+    }
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const isFormInvalid = Object.values(form).some((value) => !value);
+    if (isFormInvalid) {
+      setError("Please fill out all the fields.");
+      return;
+    }
+
+    mutation.mutate(form);
+  };
+
+  const handleChange = (e) => {
+    setError("");
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -69,12 +83,9 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
         resetForm();
         setIsModalOpen(false);
       }}
-      // maxWidth="md"
-      // sx={{ padding: "20px" }}
       fullWidth
     >
       <DialogTitle>
-        Add new Transaction
         <IconButton
           aria-label="close"
           onClick={() => {
@@ -92,19 +103,18 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent
-        dividers
+        // dividers
         sx={{
           padding: 5,
-          borderBottom: "none", // removes bottom divider
+          borderBottom: "none",
         }}
       >
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 mt-10">
           <div>
             <TextField
               fullWidth
               name="description"
               label="Enter Description"
-              // type="number"
               value={form.description}
               onChange={handleChange}
               required
@@ -129,6 +139,7 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
               value={transactionType}
               onChange={(e) => {
                 setTransactionType(e.target.value);
+                setError("");
                 setForm((prev) => ({
                   ...prev,
                   type: e.target.value,
@@ -136,7 +147,7 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
                 }));
               }}
               row
-              style={{ justifyContent: "flex-start" }} // Align radio buttons to the left
+              style={{ justifyContent: "flex-start" }}
             >
               {["income", "expense"].map((option) => (
                 <FormControlLabel
@@ -145,7 +156,7 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
                     <Radio
                       size="small"
                       value={option}
-                      checked={transactionType === option} // Check if this option is selected
+                      checked={transactionType === option}
                     />
                   }
                   label={option === "expense" ? "Expense" : "Income"}
@@ -162,8 +173,9 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
                 onChange={(event, newValue) => {
                   setForm((prev) => ({
                     ...prev,
-                    category: newValue || "", // fallback to empty string if cleared
+                    category: newValue || "",
                   }));
+                  setError("");
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -171,7 +183,7 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
                     label="Category"
                     inputProps={{
                       ...params.inputProps,
-                      readOnly: true, // Prevents typing
+                      readOnly: true,
                     }}
                     required
                   />
@@ -183,28 +195,40 @@ const TransactionForm = ({ onAdd, isModalOpen, setIsModalOpen }) => {
         </div>
         <div className="mt-5">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              sx={{ width: "100%" }}
-              label="Transaction Date"
+            <DateTimePicker
+              sx={{ width: '100%' }}
+              label="Transaction Date & Time"
               value={transactionDate}
-              // onChange={setTransactionDate}
               onChange={(newDate) => {
                 setTransactionDate(newDate);
                 setForm((prev) => ({
                   ...prev,
-                  date: newDate ? newDate.format("YYYY-MM-DD") : null,
+                  date: newDate ? newDate.format("YYYY-MM-DDTHH:mm:ss") : null,
                 }));
+                setError("");
               }}
               slotProps={{ textField: { size: "small" } }}
             />
           </LocalizationProvider>
         </div>
+        {error && (
+          <div className='text-start mt-2'>
+            {<p style={{ color: "#BD271E" }}>{error}</p>}
+          </div>
+        )}
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: "flex-end", padding: 3 }}>
         <Button
           variant="contained"
-          sx={{ textTransform: "none" }}
+          color="primary"
+          sx={{
+            textTransform: "none",
+            background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+            "&:hover": {
+              background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
+            },
+          }}
           onClick={handleSubmit}
         >
           Save Transaction

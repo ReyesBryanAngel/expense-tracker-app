@@ -12,10 +12,11 @@ const TimeRange = ({ filter, handleFilterChange }) => {
     <Box
       mt={4}
       display="flex"
-      justifyContent="space-between"
+      justifyContent="flex-end"
       alignItems="center"
+      position="relative"
     >
-      <Typography variant="h6" color="textSecondary">
+      <Typography variant="h6" color="textSecondary" sx={{ position: "absolute", top: -30, left: 0 }}>
         Spending Overview
       </Typography>
       <FormControl size="small">

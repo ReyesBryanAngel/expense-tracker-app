@@ -5,7 +5,7 @@ import TimeRange from "../components/TimeRange";
 const ChartSection = ({ transactions, filter, handleFilterChange }) => {
   const monthsSet = new Set();
 
-  transactions.forEach(({ date }) => {
+  transactions?.forEach(({ date }) => {
     const d = new Date(date);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
       2,
@@ -31,7 +31,7 @@ const ChartSection = ({ transactions, filter, handleFilterChange }) => {
   });
 
   // Populate income/expense per month
-  transactions.forEach(({ date, amount, type }) => {
+  transactions?.forEach(({ date, amount, type }) => {
     const d = new Date(date);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
       2,

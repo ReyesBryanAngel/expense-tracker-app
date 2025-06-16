@@ -73,10 +73,19 @@ const TotalCalculation = ({
           Total Balance
         </Typography>
         <Typography variant="h5" color="primary">
-          {totalBalance?.toLocaleString("en-PH", {
-            style: "currency",
-            currency: "PHP",
-          })}
+          {totalBalance > 0 ? (
+            totalBalance?.toLocaleString("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            })
+          ) : (
+            0.00?.toLocaleString("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            })
+          )
+          }
+
         </Typography>
         <Box display="flex" alignItems="center" mt={1}>
           {balanceChange >= 0 ? (

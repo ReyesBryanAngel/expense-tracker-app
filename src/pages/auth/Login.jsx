@@ -1,11 +1,7 @@
-import React from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
-  Container,
-  Divider,
-  FormControlLabel,
   IconButton,
   InputAdornment,
   Link,
@@ -16,9 +12,32 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Please enter email and password.");
+      return;
+    }
+    axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, { email: email, password: password }).then((response) => {
+      if (response?.data?.code === 200) {
+        console.log('token console:', response?.data?.accessToken)
+        localStorage.setItem('accessToken', JSON.stringify(response?.data?.accessToken));
+        localStorage.setItem('refreshToken', JSON.stringify(response?.data?.refreshToken));
+        navigate('/dashboard');
+      }
+    }).catch((error) => {
+      setError(error.response.data.message);
+    });
+  }
 
   return (
     <Box
@@ -51,7 +70,7 @@ const Login = () => {
             </Typography>
           </Box>
           <Typography variant="h6" fontWeight="bold">
-            FinanceTracker
+            FinTrack
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Sign in to manage your finances
@@ -61,12 +80,23 @@ const Login = () => {
         <TextField
           fullWidth
           label="Email Address"
-          placeholder="you@example.com"
+          // placeholder="you@example.com"
           margin="normal"
+          required
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError("");
+          }}
         />
         <TextField
           fullWidth
           label="Password"
+          placeholder="Password"
+          required
+          onChange={(e) => {
+            setPassword(e.target.value)
+            setError("");
+          }}
           type={showPassword ? "text" : "password"}
           margin="normal"
           InputProps={{
@@ -82,7 +112,12 @@ const Login = () => {
             ),
           }}
         />
-        <Box
+        {error && (
+          <div className='text-start'>
+            {<p style={{ color: "#BD271E" }}>{error}</p>}
+          </div>
+        )}
+        {/* <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
@@ -92,16 +127,26 @@ const Login = () => {
             control={<Checkbox size="small" />}
             label="Remember me"
           />
+          <Link href="#" variant="body2" sx={{ alignSelf: 'self-end' }}>
+            Forgot password?
+          </Link>
+        </Box> */}
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="center"
+          mt={1}
+        >
           <Link href="#" variant="body2">
             Forgot password?
           </Link>
         </Box>
 
-        <Button fullWidth variant="contained" sx={{ mt: 2, borderRadius: 2 }}>
+        <Button fullWidth variant="contained" sx={{ mt: 2, borderRadius: 2 }} onClick={handleLogin}>
           Sign in
         </Button>
 
-        <Divider sx={{ my: 3 }}>Or continue with</Divider>
+        {/* <Divider sx={{ my: 3 }}>Or continue with</Divider>
 
         <Box display="flex" justifyContent="space-between" gap={2}>
           <Button
@@ -120,7 +165,7 @@ const Login = () => {
           >
             Facebook
           </Button>
-        </Box>
+        </Box> */}
 
         <Typography textAlign="center" variant="body2" sx={{ mt: 3 }}>
           Don’t have an account?{" "}

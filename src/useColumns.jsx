@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import WalletIcon from "@mui/icons-material/Wallet";
-import { categoryTextColor } from "./constants";
+import { categoryTextColor } from "./utils/constants";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -12,7 +12,6 @@ const useColumns = () => {
       headerName: "Category",
       sortable: true,
       width: 210,
-      // flex: 1,
       renderCell: ({ value }) => {
         const colorSet = categoryTextColor[value] || {
           bg: "#f5f5f5",
@@ -44,12 +43,9 @@ const useColumns = () => {
       field: "description",
       headerName: "Description",
       width: 310,
-      // flex: 2, // ← allow column to grow
       editable: true,
       renderCell: ({ row }) => {
         const transactionType = row.type;
-        const backgroundColor =
-          transactionType === "expense" ? "#fdecea" : "#e6f4ea";
         const iconColor = transactionType === "expense" ? "#f44336" : "#4caf50";
 
         return (
@@ -58,14 +54,13 @@ const useColumns = () => {
               display: "flex",
               alignItems: "center",
               gap: 1.5,
+              height: "100%"
             }}
           >
             <Box
               sx={{
-                // width: 36,
                 height: 36,
                 borderRadius: "50%",
-                // backgroundColor,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -75,17 +70,16 @@ const useColumns = () => {
             </Box>
             <Box>
               <Typography
-                fontWeight={600}
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  maxWidth: 180, // or any max width that fits your design
+                  maxWidth: 180,
                 }}
               >
                 {row.description}
               </Typography>
-              <Typography color="text.secondary">{row.category}</Typography>
+              {/* <Typography color="text.secondary">{row.category}</Typography> */}
             </Box>
           </Box>
         );
@@ -96,8 +90,8 @@ const useColumns = () => {
       headerName: "Amount",
       sortable: true,
       width: 210,
-      // flex: 1, // ← allow column to grow
       renderCell: ({ row }) => {
+        const moneyColor = row.type === "expense" ? "error" : "success";
         return (
           <Box
             sx={{
@@ -106,7 +100,8 @@ const useColumns = () => {
               height: "100%",
             }}
           >
-            <Typography>
+            <Typography color={moneyColor}>
+              <span>{row.type === "expense" ? "-" : "+"}</span>&nbsp;
               {row?.amount?.toLocaleString("en-PH", {
                 style: "currency",
                 currency: "PHP",
@@ -120,21 +115,20 @@ const useColumns = () => {
       field: "date",
       headerName: "Date",
       width: 210,
-      // flex: 1, // ← allow column to grow
       type: "date",
       sortable: true,
-      valueFormatter: (params) => dayjs(params).format("MMMM DD, YYYY"),
+      valueFormatter: (params) =>
+        dayjs(params).format("MMMM DD, YYYY h:mm A"), // e.g. "June 14, 2025 5:57 PM"
     },
     {
       field: "action",
       width: 210,
       headerName: "",
       sortable: false,
-      // flex: 1, // ← allow column to grow
       type: "date",
-      renderCell: ({ row }) => {
+      renderCell: () => {
         return (
-          <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 2 }}>
             <EditIcon color="primary" sx={{ cursor: "pointer" }} />
             <DeleteIcon color="error" sx={{ cursor: "pointer" }} />
           </Box>
