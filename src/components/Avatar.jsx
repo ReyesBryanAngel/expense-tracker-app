@@ -90,10 +90,10 @@ const Avatar = () => {
                 <Tooltip title='Profile' onClick={openAvatar} sx={{ position: "relative" }}>
                     <IconButton disableRipple>
                         <div
-                            className="flex justify-center items-center rounded-full w-10 h-10 p-4 border-2 text-white"
-                            style={{
-                                background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
-                            }}
+                            className="flex justify-center items-center rounded-full w-10 h-10 p-4 border-2 text-white bg-blue-500"
+                            // style={{
+                            //     background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+                            // }}
                         >
                             <div className="flex text-xs">
                                 {avatar}

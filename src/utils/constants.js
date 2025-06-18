@@ -53,6 +53,8 @@ export const categoryList = [
   "Others",
 ];
 
+export const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&_*])(?=.*\d).{8,}$/;
+
 
 // const [transactions, setTransactions] = useState([
 //   {

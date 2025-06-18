@@ -10,11 +10,13 @@ import { categoryColors } from "../utils/constants";
 import Avatar from "../components/Avatar";
 import NoTransactionsPlaceholder from "../components/NoTransactionPlaceholder";
 import useFetchTransactions from "../hooks/useFetchTransactions";
-
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import DashboardSkeleton from "../components/DashboardSkeleton";
+import Footer from "../components/Footer";
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { transactions } = useFetchTransactions();
+  const { transactions, isPending } = useFetchTransactions();
   const [filter, setFilter] = useState("30d");
 
   const handleFilterChange = (e) => {
@@ -73,15 +75,15 @@ const Dashboard = () => {
     const expenses = transactions?.filter((t) => t.type === "expense")?.reduce((acc, t) => acc + t.amount, 0);
 
     const lastMonthIncome = transactions?.filter(
-        (t) =>
-          t.type === "income" && filterByMonth(t.date, lastMonth, lastMonthYear)
-      )?.reduce((acc, t) => acc + t.amount, 0);
+      (t) =>
+        t.type === "income" && filterByMonth(t.date, lastMonth, lastMonthYear)
+    )?.reduce((acc, t) => acc + t.amount, 0);
 
     const lastMonthExpenses = transactions?.filter(
-        (t) =>
-          t.type === "expense" &&
-          filterByMonth(t.date, lastMonth, lastMonthYear)
-      )?.reduce((acc, t) => acc + t.amount, 0);
+      (t) =>
+        t.type === "expense" &&
+        filterByMonth(t.date, lastMonth, lastMonthYear)
+    )?.reduce((acc, t) => acc + t.amount, 0);
 
     const incomeChange = lastMonthIncome
       ? ((income - lastMonthIncome) / lastMonthIncome) * 100
@@ -134,16 +136,24 @@ const Dashboard = () => {
   return (
     <>
       <div className={`fixed w-full top-0 bg-white left-1/2 transform -translate-x-1/2 z-10 pr-5 h-16`}>
-        <Avatar />
+        <Box sx={{ display: "flex", alignContent: "center", justifyContent: "space-between", alignItems: "center", height: "100%" }}>
+          <Typography variant="h6" fontWeight="bold" color="primary" sx={{ ml: 2 }}>
+            <QueryStatsIcon fontSize="large" color="primary" />
+            Fintrack
+          </Typography>
+          <Avatar />
+        </Box>
       </div>
       <TransactionForm
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />
-      {transactions?.length === 0 ? (
-        <NoTransactionsPlaceholder onAddTransaction={() => setIsModalOpen(true)} />
-      ) :
 
+      {isPending && !transactions ? (
+        <DashboardSkeleton />
+      ) : transactions && transactions?.length === 0 ? (
+        <NoTransactionsPlaceholder onAddTransaction={() => setIsModalOpen(true)} />
+      ) : (
         <Box sx={{
           background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
           minHeight: "100vh",
@@ -151,7 +161,7 @@ const Dashboard = () => {
           justifyContent: "center",
           alignItems: "center",
         }}>
-          <Container sx={{py: 12}}>
+          <Container sx={{ py: 12 }}>
             <div className="flex flex-col lg:flex-row items-start gap-5 justify-between items-center">
               <Typography variant="h5" color="textSecondary">
                 Financial Dashboard
@@ -161,9 +171,7 @@ const Dashboard = () => {
                 variant="contained"
                 startIcon={<AddIcon />}
                 sx={{
-                  textTransform: "none", background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)", "&:hover": {
-                    background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
-                  },
+                  textTransform: "none"
                 }}
               >
                 Add Transaction
@@ -206,14 +214,14 @@ const Dashboard = () => {
                   >
                     <div className="flex flex-col justify-center">
                       <Typography
-                        sx={{ position:'absolute', top: 10, left: 10 }}
+                        sx={{ position: 'absolute', top: 10, left: 10 }}
                         color="textSecondary"
                         variant="h6"
                       >
                         Expense Breakdown
                       </Typography>
                       <PieChart
-                      sx={{ mt:2 }}
+                        sx={{ mt: 2 }}
                         series={[
                           {
                             data: expenseBreakdownData.map(
@@ -254,11 +262,12 @@ const Dashboard = () => {
               </div>
             </div>
             <Box mt={20}>
-              <TransactionTable transactions={transactions} />
+              <TransactionTable transactions={transactions} setIsModalOpen={setIsModalOpen} />
             </Box>
           </Container>
         </Box>
-      }
+      )}
+      <Footer />
     </>
   );
 };

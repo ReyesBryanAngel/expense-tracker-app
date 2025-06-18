@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getTransactions } from '../api';
 
 const useFetchTransactions = () => {
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, isPending } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
       return await getTransactions();
@@ -10,7 +10,7 @@ const useFetchTransactions = () => {
     retry: 0,
   });
 
-  return { transactions: data?.data, refetch, isLoading };
+  return { transactions: data?.data, refetch, isLoading, isPending };
 };
 
 

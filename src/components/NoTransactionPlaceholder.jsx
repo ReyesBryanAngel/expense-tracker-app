@@ -29,7 +29,7 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
                     mb: 3,
                 }}
             >
-                <MonetizationOnIcon sx={{ fontSize: 40, color: "#6B4EFF" }} />
+                <MonetizationOnIcon sx={{ fontSize: 40 }} color="primary" />
             </Box>
 
             <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -47,15 +47,15 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
                 startIcon={<AddIcon />}
                 onClick={onAddTransaction}
                 sx={{
-                    background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+                    // background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
                     color: "#fff",
                     fontWeight: "bold",
                     px: 3,
                     borderRadius: "8px",
                     textTransform: "none",
-                    "&:hover": {
-                        background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
-                    },
+                    // "&:hover": {
+                    //     background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
+                    // },
                 }}
             >
                 Add Your First Transaction

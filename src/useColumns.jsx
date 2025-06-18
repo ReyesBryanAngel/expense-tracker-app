@@ -4,8 +4,20 @@ import WalletIcon from "@mui/icons-material/Wallet";
 import { categoryTextColor } from "./utils/constants";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { GlobalDataContext } from "./contexts/globalData";
+import { useContext, useState } from "react";
+import { deleteTransaction } from "./api";
 
-const useColumns = () => {
+const useColumns = (setIsModalOpen) => {
+  const { setForm, setIsEditMode } = useContext(GlobalDataContext);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [transactionId, setTransactionId] = useState(null);
+  const handleOpenForm = (row) => {
+    setForm(row);
+    setIsModalOpen(true);
+    setIsEditMode(true)
+  }
+
   const columns = [
     {
       field: "category",
@@ -118,7 +130,7 @@ const useColumns = () => {
       type: "date",
       sortable: true,
       valueFormatter: (params) =>
-        dayjs(params).format("MMMM DD, YYYY h:mm A"), // e.g. "June 14, 2025 5:57 PM"
+        dayjs(params).format("MMMM DD, YYYY h:mm A"),
     },
     {
       field: "action",
@@ -126,18 +138,22 @@ const useColumns = () => {
       headerName: "",
       sortable: false,
       type: "date",
-      renderCell: () => {
+      renderCell: ({ row }) => {
+
         return (
           <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 2 }}>
-            <EditIcon color="primary" sx={{ cursor: "pointer" }} />
-            <DeleteIcon color="error" sx={{ cursor: "pointer" }} />
+            <EditIcon color="primary" sx={{ cursor: "pointer" }} onClick={() => handleOpenForm(row)} />
+            <DeleteIcon color="error" sx={{ cursor: "pointer" }} onClick={() => {
+              setTransactionId(row?._id);
+              setIsDeleteModalOpen(true);
+            }} />
           </Box>
         );
       },
     },
   ];
 
-  return { columns };
+  return { columns, isDeleteModalOpen, transactionId, setIsDeleteModalOpen };
 };
 
 export default useColumns;

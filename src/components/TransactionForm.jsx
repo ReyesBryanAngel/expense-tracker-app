@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   TextField,
   Dialog,
@@ -17,21 +17,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { categoryList } from "../utils/constants";
-import { createTransaction } from "../api";
+import { createTransaction, updateTransaction } from "../api";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from "react-toastify";
+import { GlobalDataContext } from "../contexts/globalData";
+import dayjs from "dayjs";
 
 const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
   const [transactionType, setTransactionType] = useState(null);
   const [transactionDate, setTransactionDate] = useState(null);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    amount: "",
-    category: "",
-    type: transactionType,
-    description: "",
-    date: transactionDate,
-  });
+  const { form, setForm, isEditMode, setIsEditMode } = useContext(GlobalDataContext);
 
   const resetForm = () => {
     setForm({
@@ -44,15 +40,16 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
     setTransactionDate(null);
     setTransactionType(null);
     setError("");
+    setIsEditMode(false);
+    setIsModalOpen(false);
   };
 
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: createTransaction,
     onSuccess: (responseData) => {
       queryClient.invalidateQueries(["transactions"]);
       toast.success(responseData?.message)
-      setIsModalOpen(false);
       resetForm();
     },
     onError: (error) => {
@@ -60,15 +57,34 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
     }
   });
 
+  const updateMutation = useMutation({
+    mutationFn: updateTransaction,
+    onSuccess: (responseData) => {
+      queryClient.invalidateQueries(["transactions"]);
+      toast.success(responseData?.message);
+      resetForm();
+    },
+    onError: (error) => {
+      console.error(error)
+    }
+  })
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isFormInvalid = Object.values(form).some((value) => !value);
+    const isFormInvalid = Object.entries(form).some(
+      ([key, value]) => value === "" || value === null || value === undefined
+    );
+
     if (isFormInvalid) {
       setError("Please fill out all the fields.");
       return;
     }
 
-    mutation.mutate(form);
+    if (isEditMode) {
+      updateMutation.mutate(form);
+    } else {
+      createMutation.mutate(form)
+    }
   };
 
   const handleChange = (e) => {
@@ -81,7 +97,6 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
       open={isModalOpen}
       onClose={() => {
         resetForm();
-        setIsModalOpen(false);
       }}
       fullWidth
     >
@@ -89,7 +104,6 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
         <IconButton
           aria-label="close"
           onClick={() => {
-            setIsModalOpen(false);
             resetForm();
           }}
           sx={{
@@ -156,7 +170,7 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
                     <Radio
                       size="small"
                       value={option}
-                      checked={transactionType === option}
+                      checked={(transactionType || form.type) === option}
                     />
                   }
                   label={option === "expense" ? "Expense" : "Income"}
@@ -165,7 +179,7 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
             </RadioGroup>
           </div>
           <div>
-            {transactionType === "expense" && (
+            {(transactionType || form.type) === "expense" && (
               <Autocomplete
                 size="small"
                 options={categoryList}
@@ -198,7 +212,13 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
             <DateTimePicker
               sx={{ width: '100%' }}
               label="Transaction Date & Time"
-              value={transactionDate}
+              value={
+                transactionDate && dayjs(transactionDate).isValid()
+                  ? dayjs(transactionDate)
+                  : form.date && dayjs(form.date).isValid()
+                    ? dayjs(form.date)
+                    : null
+              }
               onChange={(newDate) => {
                 setTransactionDate(newDate);
                 setForm((prev) => ({
@@ -224,14 +244,10 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
           color="primary"
           sx={{
             textTransform: "none",
-            background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
-            "&:hover": {
-              background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
-            },
           }}
           onClick={handleSubmit}
         >
-          Save Transaction
+          {isEditMode ? "Edit Transacton" : "Save Transaction"}
         </Button>
       </DialogActions>
     </Dialog>

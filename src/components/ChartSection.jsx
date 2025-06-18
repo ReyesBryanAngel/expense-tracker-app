@@ -15,13 +15,18 @@ const ChartSection = ({ transactions, filter, handleFilterChange }) => {
   });
 
   const sortedMonthKeys = Array.from(monthsSet).sort(); // Sort chronologically
-  const months = sortedMonthKeys.map((key) => {
-    const [year, month] = key.split("-");
-    return new Date(`${year}-${month}-01`).toLocaleString("default", {
-      month: "short",
-    });
-  });
+  // const months = sortedMonthKeys.map((key) => {
+  //   const [year, month] = key.split("-");
+  //   return new Date(`${year}-${month}-01`).toLocaleString("default", {
+  //     month: "short",
+  //   });
+  // });
 
+  const months = sortedMonthKeys?.map((key) => {
+    const [year, month] = key.split("-");
+    return new Date(`${year}-${month}-01`);
+  });
+  
   // Initialize maps
   const incomeMap = {};
   const expenseMap = {};
@@ -55,8 +60,14 @@ const ChartSection = ({ transactions, filter, handleFilterChange }) => {
             { data: incomeData, label: "Income", color: "#3f51b5" },
             { data: expenseData, label: "Expenses", color: "#f9a825" },
           ]}
-          xAxis={[{ scaleType: "band", data: months }]}
+          xAxis={[{
+            scaleType: "time",
+            data: months,
+            valueFormatter: (date) =>
+              date.toLocaleString("default", { month: "short" }),
+          }]}
           margin={{ left: 50, right: 20, top: 30, bottom: 30 }}
+          grid={{ vertical: true, horizontal: true }}
         />
       </Box>
     </Paper>
