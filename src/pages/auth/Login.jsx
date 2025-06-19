@@ -34,7 +34,6 @@ const Login = () => {
     }
     axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, { email: email, password: password }).then((response) => {
       if (response?.data?.code === 200) {
-        console.log('token console:', response?.data?.accessToken)
         localStorage.setItem('accessToken', JSON.stringify(response?.data?.accessToken));
         localStorage.setItem('refreshToken', JSON.stringify(response?.data?.refreshToken));
         navigate('/dashboard');

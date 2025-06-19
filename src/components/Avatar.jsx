@@ -9,7 +9,10 @@ import {
     MenuItem,
     ListItemIcon,
     Dialog,
+    DialogTitle,
     DialogContent,
+    Box,
+
 } from "@mui/material";
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
@@ -18,11 +21,19 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import 'dayjs/locale/en';
 import { jwtDecode } from "jwt-decode";
 import { getInitials } from '../utils/globalFunctions';
+import ProfileCard from './ProfileCard';
 
 
 const Avatar = () => {
     const [avatar, setAvatar] = useState(null);
-    const [profileInfo, setProfileInfo] = useState({ name: "", email: "" })
+    const [profileInfo, setProfileInfo] = useState({
+        email: "",
+        firstName: "",
+        lastName: "",
+        age: "",
+        phoneNumber: "",
+        isVerified: ""
+    })
     const [profile, setProfile] = useState(false);
     const [anchorEl, setAnchorEl] = useState(false);
     const accessToken = localStorage.getItem('accessToken')
@@ -39,9 +50,16 @@ const Avatar = () => {
 
     useEffect(() => {
         const decodedToken = jwtDecode(parsedToken)
-        const userName = `${decodedToken?.firstName} ${decodedToken?.lastName}`
-        const initials = getInitials(userName);
-        setProfileInfo({ name: userName, email: decodedToken?.email })
+        const username = `${decodedToken?.firstName} ${decodedToken?.lastName}`
+        const initials = getInitials(username);
+        setProfileInfo({
+            email: decodedToken?.email,
+            firstName: decodedToken?.firstName,
+            lastName: decodedToken?.lastName,
+            age: decodedToken?.age,
+            phoneNumber: decodedToken?.phoneNumber,
+            isVerified: decodedToken?.isVerified
+        })
         setAvatar(initials);
     }, [])
 
@@ -63,37 +81,31 @@ const Avatar = () => {
                 onClose={closeDialog}
                 open={profile}
             >
-                {/* Avatar content */}
-                <DialogContent>
-                    <div className='absolute right-0 top-0'>
-                        <IconButton onClick={closeDialog} disableRipple>
-                            <HighlightOffRoundedIcon />
-                        </IconButton>
-                    </div>
-                    <div className="flex flex-col py-5 relative">
-                        <div className='px-3 whitespace-nowrap'>
-                            <div>
-                                <Typography sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                    Name: {profileInfo.name}
-                                    {/* Name: Angel Bryan Reyes */}
-                                </Typography>
-                                <Typography sx={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "30px" }}>
-                                    Email: {profileInfo.email}
-                                    {/* Email: reyesangelbryan@gmail.com */}
-                                </Typography>
-                            </div>
+                <DialogTitle sx={{
+                    bgcolor: '#1976d2',
+                    color: '#fff',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    height:'60px'
 
-                        </div>
-                    </div>
+                }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        Profile Information
+                    </Typography>
+                    <IconButton onClick={closeDialog} sx={{ color: 'white' }}>
+                        <HighlightOffRoundedIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                   <ProfileCard profileInfo={profileInfo} />
                 </DialogContent>
-            </Dialog><Toolbar className="flex justify-end">
+            </Dialog>
+            <Toolbar className="flex justify-end">
                 <Tooltip title='Profile' onClick={openAvatar} sx={{ position: "relative" }}>
                     <IconButton disableRipple>
                         <div
                             className="flex justify-center items-center rounded-full w-10 h-10 p-4 border-2 text-white bg-blue-500"
-                            // style={{
-                            //     background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
-                            // }}
                         >
                             <div className="flex text-xs">
                                 {avatar}

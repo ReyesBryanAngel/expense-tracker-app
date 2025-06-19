@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Container, Typography, Box, Button, Paper } from "@mui/material";
 import TransactionForm from "../components/TransactionForm";
 import ChartSection from "../components/ChartSection";
@@ -13,11 +13,16 @@ import useFetchTransactions from "../hooks/useFetchTransactions";
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import DashboardSkeleton from "../components/DashboardSkeleton";
 import Footer from "../components/Footer";
+import { useUserActivity } from "../utils/userActivity";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { transactions, isPending } = useFetchTransactions();
   const [filter, setFilter] = useState("30d");
+  const location = useLocation();
+  const navigate = useNavigate();
+  useUserActivity(840000, navigate, location)
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);

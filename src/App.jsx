@@ -11,10 +11,10 @@ import ChangePassword from "./pages/auth/ChangePassword";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
- useEffect(() => {
-  const userToken = JSON.parse(localStorage.getItem('accessToken'));
-  setIsLoggedIn(!!userToken); // sets true only if token exists
-}, []);
+  useEffect(() => {
+    const userToken = JSON.parse(localStorage.getItem('accessToken'));
+    setIsLoggedIn(!!userToken);
+  }, []);
 
   return (
     <>
