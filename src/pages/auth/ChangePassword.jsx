@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { Box, Paper, Typography, TextField, Button, InputAdornment, IconButton } from '@mui/material';
+import { Box, Paper, Typography, TextField, Button, InputAdornment, IconButton, CircularProgress  } from '@mui/material';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const ChangePassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChangePassword = async () => {
         if (!passwordRegex.test(form.newPassword)) {
@@ -32,9 +33,11 @@ const ChangePassword = () => {
             return;
         }
 
+        // eslint-disable-next-line no-unused-vars
         const { confirmPassword, ...payload } = form;
 
         try {
+            setIsLoading(true);
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/change-password`, payload);
             if (response?.data?.code === 200) {
                 toast.success(response?.data?.message);
@@ -44,12 +47,15 @@ const ChangePassword = () => {
             }
         } catch (error) {
             setError(error.response.data.message);
+        } finally {
+            setIsLoading(false);
         }
     }
     return (
         <Box
+            bgcolor="#e3f2fd"
             sx={{
-                background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+                // background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
                 minHeight: "100vh",
                 display: "flex",
                 justifyContent: "center",
@@ -97,7 +103,7 @@ const ChangePassword = () => {
                         setForm((prev) => ({ ...prev, confirmPassword: e.target.value }));
                         setError("");
                     }}
-                     InputProps={{
+                    InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -120,7 +126,7 @@ const ChangePassword = () => {
                     sx={{ mt: 2, borderRadius: 2 }}
                     onClick={handleChangePassword}
                 >
-                    Change Password
+                    {isLoading ? <CircularProgress sx={{ color: "white" }} size={24} /> : "Change Password"}
                 </Button>
 
             </Paper>

@@ -26,6 +26,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -33,6 +34,7 @@ const Login = () => {
       return;
     }
     axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, { email: email, password: password }).then((response) => {
+      setIsLoading(true)
       if (response?.data?.code === 200) {
         localStorage.setItem('accessToken', JSON.stringify(response?.data?.accessToken));
         localStorage.setItem('refreshToken', JSON.stringify(response?.data?.refreshToken));
@@ -40,49 +42,44 @@ const Login = () => {
       }
     }).catch((error) => {
       setError(error.response.data.message);
+    }).finally(() => {
+      setIsLoading(false)
     });
   }
 
   return (
     <Box
+      bgcolor="#e3f2fd"
       sx={{
-        background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+        position: "relative",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "space-evenly",
         alignItems: "center",
-
         p: 2,
       }}
     >
-      {/* <div className="flex flex-col items-center">
-        <AccountBalanceIcon sx={{ fontSize: 300 }} color="primary" />
-        <Typography color="textSecondary" variant="h6">Finance Made Simple</Typography>
-      </div> */}
+      <Box
+        sx={{
+          display: { xs: "none", sm: "flex" },
+          alignItems: "center",
+          userSelect: "none",
+        }}
+      >
+        <QueryStatsIcon sx={{ fontSize: 140, color: "#1976d2" }} />
+        <Typography
+          variant="h2"
+          fontWeight="bold"
+          color="primary"
+          sx={{ mt: 1 }}
+        >
+          Fintrack
+        </Typography>
+      </Box>
 
-      <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400 }}>
+      {/* Login Form */}
+      <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400, zIndex: 2 }}>
         <Box textAlign="center" mb={3}>
-          {/* <Box
-            sx={{
-              width: 50,
-              height: 50,
-              borderRadius: "50%",
-              backgroundColor: "#EEE",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              margin: "auto",
-              mb: 1,
-            }}
-          >
-            <Typography color="primary" fontWeight="bold">
-              <QueryStatsIcon fontSize="large" />
-            </Typography>
-          </Box> */}
-          <Typography variant="h6" fontWeight="bold" color="primary">
-            <QueryStatsIcon fontSize="large" color="primary" />
-            Fintrack
-          </Typography>
           <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
             Sign in to manage your finances
           </Typography>
@@ -92,7 +89,6 @@ const Login = () => {
           size="small"
           fullWidth
           label="Email Address"
-          // placeholder="you@example.com"
           margin="normal"
           required
           onChange={(e) => {
@@ -157,7 +153,7 @@ const Login = () => {
         </Box>
 
         <Button fullWidth variant="contained" sx={{ mt: 2, borderRadius: 2 }} onClick={handleLogin}>
-          Sign in
+          {isLoading ? <CircularProgress sx={{ color: "white" }} size={24} /> : "Sign in"}
         </Button>
 
         {/* <Divider sx={{ my: 3 }}>Or continue with</Divider>
@@ -198,6 +194,7 @@ const Login = () => {
         </Typography> */}
       </Paper>
     </Box>
+
   );
 };
 

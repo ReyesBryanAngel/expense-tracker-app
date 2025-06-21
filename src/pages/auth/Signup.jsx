@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
   Paper,
+  CircularProgress
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
@@ -27,10 +28,13 @@ const SignUp = () => {
     phoneNumber: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
+    setIsLoading(true);
     const isFormInvalid = Object.values(form).some((value) => !value);
     if (isFormInvalid) {
       setError("Please fill out all the fields.");
@@ -58,36 +62,58 @@ const SignUp = () => {
           age: Number(payload.age),
         }
       );
-      if (response?.data?.code === 201) {
-        toast.success("Account created successfully!");
+      if ([201, 200]?.includes(response?.data?.code)) {
+        toast.success(response?.data?.message);
         navigate("/");
       }
     } catch (err) {
       setError(err?.response?.data?.message || "Signup failed.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
+
     <Box
+      bgcolor="#e3f2fd"
       sx={{
-        background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
+        position: "relative",
         minHeight: "100vh",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         alignItems: "center",
         p: 2,
       }}
     >
+      {/* Left branding */}
+      <Box
+        sx={{
+          display: { xs: "none", sm: "flex" },
+          alignItems: "center",
+          userSelect: "none",
+        }}
+      >
+        <QueryStatsIcon sx={{ fontSize: 140, color: "#1976d2" }} />
+        <Typography
+          variant="h2"
+          fontWeight="bold"
+          color="primary"
+          sx={{ mt: 1 }}
+        >
+          Fintrack
+        </Typography>
+      </Box>
+
+      {/* Form */}
       <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400 }}>
         <Box textAlign="center" mb={3}>
-          <Typography variant="h6" fontWeight="bold" color="primary">
-            <QueryStatsIcon fontSize="large" color="primary" />
-            Fintrack
-          </Typography>
           <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
             Create your account to start tracking your finances.
           </Typography>
         </Box>
+
+        {/* ... form fields remain the same ... */}
 
         <TextField
           size="small"
@@ -170,12 +196,21 @@ const SignUp = () => {
           size="small"
           fullWidth
           label="Confirm Password"
-          type={showPassword ? "text" : "password"}
+          type={showConfirmPassword ? "text" : "password"}
           margin="normal"
           value={form.confirmPassword}
           onChange={(e) => {
             setForm((prev) => ({ ...prev, confirmPassword: e.target.value }));
             setError("");
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
         />
 
@@ -191,12 +226,12 @@ const SignUp = () => {
           sx={{ mt: 2, borderRadius: 2 }}
           onClick={handleSignup}
         >
-          Sign Up
+          {isLoading ? <CircularProgress sx={{ color: "white" }} size={24} /> : "Sign Up"}
         </Button>
 
         <Typography textAlign="center" variant="body2" sx={{ mt: 3 }}>
           Already have an account?{" "}
-          <Link href="/" underline="hover">
+          <Link onClick={() => navigate("/")} underline="hover">
             Sign in
           </Link>
         </Typography>

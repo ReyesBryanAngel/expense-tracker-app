@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import {
   TextField,
   Dialog,
@@ -12,6 +12,7 @@ import {
   Autocomplete,
   Button,
   DialogActions,
+  CircularProgress
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -247,7 +248,11 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
           }}
           onClick={handleSubmit}
         >
-          {isEditMode ? "Edit Transacton" : "Save Transaction"}
+          {createMutation.isPending ? (
+            <CircularProgress sx={{ color: "white" }} size={24} />
+          ) : (
+            isEditMode ? "Edit Transaction" : "Save Transaction"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

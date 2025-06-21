@@ -6,6 +6,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
     return (
         <Box
+            bgcolor="#e3f2fd"
             sx={{
                 textAlign: "center",
                 // mt: 10,
@@ -13,7 +14,7 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
+                // background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
                 minHeight: "100vh",
             }}
         >

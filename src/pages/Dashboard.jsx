@@ -159,13 +159,16 @@ const Dashboard = () => {
       ) : transactions && transactions?.length === 0 ? (
         <NoTransactionsPlaceholder onAddTransaction={() => setIsModalOpen(true)} />
       ) : (
-        <Box sx={{
-          background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+        <Box
+          bgcolor="#e3f2fd"
+          sx={{
+            
+            // background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
+            minHeight: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
           <Container sx={{ py: 12 }}>
             <div className="flex flex-col lg:flex-row items-start gap-5 justify-between items-center">
               <Typography variant="h5" color="textSecondary">
