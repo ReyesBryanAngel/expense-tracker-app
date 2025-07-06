@@ -53,6 +53,12 @@ export const categoryList = [
   "Others",
 ];
 
+export const frequency = [
+  "Monthly",
+  "Yearly",
+  "One-time",
+]
+
 export const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&_*])(?=.*\d).{8,}$/;
 
 

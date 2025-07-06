@@ -1,6 +1,6 @@
 import { useState, useMemo, useContext } from "react";
 import { Container, Typography, Box, Paper } from "@mui/material";
-import TransactionForm from "../components/TransactionForm";
+import TransactionForm from "../forms/TransactionForm";
 import ChartSection from "../components/dashboard/ChartSection";
 import TotalCalculation from "../components/dashboard/TotalCalculation";
 import { PieChart } from "@mui/x-charts";

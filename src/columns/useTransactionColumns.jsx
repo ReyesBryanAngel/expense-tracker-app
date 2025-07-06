@@ -1,14 +1,13 @@
 import dayjs from "dayjs";
 import { Box, Typography } from "@mui/material";
 import WalletIcon from "@mui/icons-material/Wallet";
-import { categoryTextColor } from "./utils/constants";
+import { categoryTextColor } from "../utils/constants";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { GlobalDataContext } from "./contexts/globalData";
+import { GlobalDataContext } from "../contexts/globalData";
 import { useContext, useState } from "react";
-import { deleteTransaction } from "./api";
 
-const useColumns = (setIsTransactionModalOpen) => {
+const useTransactionColumns = (setIsTransactionModalOpen) => {
   const { setForm, setIsEditMode } = useContext(GlobalDataContext);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionId, setTransactionId] = useState(null);
@@ -156,4 +155,4 @@ const useColumns = (setIsTransactionModalOpen) => {
   return { columns, isDeleteModalOpen, transactionId, setIsDeleteModalOpen };
 };
 
-export default useColumns;
+export default useTransactionColumns;

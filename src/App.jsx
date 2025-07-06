@@ -10,6 +10,7 @@ import ChangePassword from "./pages/auth/ChangePassword";
 import AccountVerifiedPage from "./pages/AccountVerifiedPage";
 import ApplicationLayout from "./layouts/ApplicationLayout";
 import TransactionPage from "./pages/TransactionPage";
+import BillsPage from "./pages/BillsPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,6 +43,15 @@ function App() {
               <RouteProtector isLoggedIn={isLoggedIn}>
                 <ApplicationLayout>
                   <TransactionPage />
+                </ApplicationLayout>
+              </RouteProtector>
+            }
+          />
+           <Route path="/bills"
+            element={
+              <RouteProtector isLoggedIn={isLoggedIn}>
+                <ApplicationLayout>
+                  <BillsPage />
                 </ApplicationLayout>
               </RouteProtector>
             }

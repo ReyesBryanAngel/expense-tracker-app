@@ -8,7 +8,7 @@ import {
   styled
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { uploadPhoto } from '../api';
+import { uploadPhoto } from '../services/photo';
 import { useMutation } from '@tanstack/react-query';
 import useFetchUserPhoto from '../hooks/useFetchUserPhoto';
 

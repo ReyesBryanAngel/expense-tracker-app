@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { refreshToken } from "./globalFunctions";
+import { refreshToken } from "../utils/globalFunctions";
 
-export const useUserActivity = (timeout = 840000, navigate, location) => {
+export const useUserActivity = (timeUntilExpiry, navigate, location) => {
     const [isActive, setIsActive] = useState(true);
     const timeoutRef = useRef(null);
     const refreshRef = useRef(null);
@@ -11,7 +11,6 @@ export const useUserActivity = (timeout = 840000, navigate, location) => {
         navigate("/");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        localStorage.removeItem("isActive");
     };
 
     const resetInactivityTimer = () => {
@@ -19,7 +18,7 @@ export const useUserActivity = (timeout = 840000, navigate, location) => {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
             logout();
-        }, timeout);
+        }, timeUntilExpiry);
     };
 
     useEffect(() => {
@@ -31,15 +30,17 @@ export const useUserActivity = (timeout = 840000, navigate, location) => {
         resetInactivityTimer();
 
         refreshRef.current = setInterval(() => {
-            refreshToken();
-        }, timeout - 60000);
+            if (isActive) {
+                refreshToken();
+            }
+        }, Math.max(5000, timeUntilExpiry - 10000)); // always use safe min
 
         return () => {
             events.forEach((event) => window.removeEventListener(event, resetInactivityTimer));
             clearTimeout(timeoutRef.current);
             clearInterval(refreshRef.current);
         };
-    }, [timeout]);
+    }, [timeUntilExpiry, isActive]);
 
     return isActive;
 };

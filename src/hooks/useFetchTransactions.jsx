@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getTransactions } from '../api';
+import { getTransactions } from '../services/transactions';
 
 const useFetchTransactions = () => {
   const { data, isLoading, refetch, isPending } = useQuery({

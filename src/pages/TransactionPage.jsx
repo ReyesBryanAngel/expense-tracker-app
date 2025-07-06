@@ -1,12 +1,12 @@
-import useColumns from "../useColumns";
-import { Box, Typography, Button } from "@mui/material";
+import useTransactionColumns from "../columns/useTransactionColumns";
+import { Box, Typography, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DynamicModal from "../components/DynamicModal";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { deleteTransaction } from "../api";
+import { deleteTransaction } from "../services/transactions";
 import { useContext } from "react";
-import TransactionForm from "../components/TransactionForm";
+import TransactionForm from "../forms/TransactionForm";
 import useFetchTransactions from "../hooks/useFetchTransactions";
 import DashboardSkeleton from "../components/dashboard/DashboardSkeleton";
 import NoTransactionsPlaceholder from "../components/NoTransactionPlaceholder";
@@ -15,7 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const TransactionPage = () => {
   const { isTransactionModalOpen, setIsTransactionModalOpen } = useContext(GlobalDataContext);
-  const { columns, isDeleteModalOpen, transactionId, setIsDeleteModalOpen } = useColumns(setIsTransactionModalOpen);
+  const { columns, isDeleteModalOpen, transactionId, setIsDeleteModalOpen } = useTransactionColumns(setIsTransactionModalOpen);
   const { transactions, isPending } = useFetchTransactions();
 
   const queryClient = useQueryClient();
@@ -32,18 +32,6 @@ const TransactionPage = () => {
   });
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 5 }}>
-      <Button
-        onClick={() => setIsTransactionModalOpen(true)}
-        variant="contained"
-        startIcon={<AddIcon />}
-        sx={{
-          textTransform: "none",
-          alignSelf:'flex-end',
-          mr: 12
-        }}
-      >
-        Add Transaction
-      </Button>
       {isPending && !transactions ? (
         <DashboardSkeleton />
       ) : transactions && transactions.length === 0 ? (
@@ -83,13 +71,32 @@ const TransactionPage = () => {
             </Typography>
           </DynamicModal>
 
-          <Box sx={{ width: "90%", height: 700 }}>
+          <Box sx={{ width: "90%", height: 650, position: 'relative' }}>
+            <IconButton
+              size="small"
+              sx={{
+                position: 'absolute',
+                alignSelf: 'end',
+                width: '24px',
+                height: '24px',
+                bgcolor: 'primary.main',
+                color: 'white',
+                borderRadius: 1,
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                },
+                right: 0
+              }}
+              onClick={() => setIsTransactionModalOpen(true)}
+            >
+              <AddIcon fontSize="small" />
+            </IconButton>
             <DataGrid
               rows={transactions}
               getRowId={(row) => row._id}
               columns={columns}
               pageSizeOptions={[20, 50, 100]}
-              sx={{ boxShadow: 2, mt: 2 }}
+              sx={{ boxShadow: 2, mt: 5 }}
             />
           </Box>
         </>

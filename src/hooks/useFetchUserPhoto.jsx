@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPhoto } from '../api';
+import { getPhoto } from '../services/photo';
 
 const useFetchUserPhoto = () => {
   const { data, isLoading, refetch, isPending } = useQuery({

@@ -11,6 +11,12 @@ export const GlobalDataProvider = ({ children }) => {
     description: "",
     date: "",
   });
+  const [billForm, setBillForm] = useState({
+    name: "",
+    amount: "",
+    frequency: "",
+    dueDate: "",
+  });
   const [profileInfo, setProfileInfo] = useState({
     email: "",
     firstName: "",
@@ -22,6 +28,7 @@ export const GlobalDataProvider = ({ children }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
 
 
 
@@ -30,6 +37,8 @@ export const GlobalDataProvider = ({ children }) => {
     () => ({
       form,
       setForm,
+      billForm,
+      setBillForm,
       isEditMode,
       setIsEditMode,
       isProfileModalOpen,
@@ -37,11 +46,15 @@ export const GlobalDataProvider = ({ children }) => {
       profileInfo,
       setProfileInfo,
       isTransactionModalOpen,
-      setIsTransactionModalOpen
+      setIsTransactionModalOpen,
+      isBillModalOpen,
+      setIsBillModalOpen
     }),
     [
       form,
       setForm,
+      billForm,
+      setBillForm,
       isEditMode,
       setIsEditMode,
       isProfileModalOpen,
@@ -49,7 +62,9 @@ export const GlobalDataProvider = ({ children }) => {
       profileInfo,
       setProfileInfo,
       isTransactionModalOpen,
-      setIsTransactionModalOpen
+      setIsTransactionModalOpen,
+      isBillModalOpen,
+      setIsBillModalOpen
     ],
   )
 

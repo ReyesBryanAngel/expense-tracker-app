@@ -11,16 +11,24 @@ import SecurityIcon from '@mui/icons-material/Security';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { UserProfile } from "../components/UserProfile";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import { useUserActivity } from "../utils/userActivity";
+import { useUserActivity } from "../hooks/userActivity";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 
 const ApplicationLayout = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    useUserActivity(840000, navigate, location)
+    const token = localStorage.getItem('accessToken')
+    const parsedToken = JSON.parse(token)
+    const decodedToken = jwtDecode(parsedToken)
+    const timeUntilExpiry = (decodedToken.exp * 1000) - Date.now();
+    useEffect(() => { console.log('timeUntilExpiry:', timeUntilExpiry) }, [timeUntilExpiry])
+    useUserActivity(timeUntilExpiry, navigate, location)
     const NAVIGATION = [
         { segment: "dashboard", title: "Dashboard", icon: <BarChartIcon /> },
         { segment: "transactions", title: "Transactions", icon: <CreditCardIcon /> },
-        { segment: "roles", title: "Roles", icon: <SecurityIcon /> }
+        { segment: "bills", title: "Bills", icon: <CalendarMonthIcon /> }
     ];
 
     const demoTheme = createTheme({
