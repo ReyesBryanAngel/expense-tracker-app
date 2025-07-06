@@ -8,13 +8,13 @@ import { GlobalDataContext } from "./contexts/globalData";
 import { useContext, useState } from "react";
 import { deleteTransaction } from "./api";
 
-const useColumns = (setIsModalOpen) => {
+const useColumns = (setIsTransactionModalOpen) => {
   const { setForm, setIsEditMode } = useContext(GlobalDataContext);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionId, setTransactionId] = useState(null);
   const handleOpenForm = (row) => {
     setForm(row);
-    setIsModalOpen(true);
+    setIsTransactionModalOpen(true);
     setIsEditMode(true)
   }
 
@@ -23,7 +23,7 @@ const useColumns = (setIsModalOpen) => {
       field: "category",
       headerName: "Category",
       sortable: true,
-      width: 210,
+      flex: 1,
       renderCell: ({ value }) => {
         const colorSet = categoryTextColor[value] || {
           bg: "#f5f5f5",
@@ -101,7 +101,7 @@ const useColumns = (setIsModalOpen) => {
       field: "amount",
       headerName: "Amount",
       sortable: true,
-      width: 210,
+      flex: 1,
       renderCell: ({ row }) => {
         const moneyColor = row.type === "expense" ? "error" : "success";
         return (
@@ -126,7 +126,7 @@ const useColumns = (setIsModalOpen) => {
     {
       field: "date",
       headerName: "Date",
-      width: 210,
+      flex: 1,
       type: "date",
       sortable: true,
       valueFormatter: (params) =>
@@ -134,7 +134,7 @@ const useColumns = (setIsModalOpen) => {
     },
     {
       field: "action",
-      width: 210,
+      flex: 1,
       headerName: "",
       sortable: false,
       type: "date",

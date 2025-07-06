@@ -33,7 +33,7 @@ const Login = () => {
       setError("Please enter email and password.");
       return;
     }
-    axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, { email: email, password: password }).then((response) => {
+    axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/login`, { email: email, password: password }).then((response) => {
       setIsLoading(true)
       if (response?.data?.code === 200) {
         localStorage.setItem('accessToken', JSON.stringify(response?.data?.accessToken));
@@ -77,8 +77,17 @@ const Login = () => {
         </Typography>
       </Box>
 
-      {/* Login Form */}
       <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400, zIndex: 2 }}>
+        <div className="flex items-center justify-center md:hidden">
+          <QueryStatsIcon sx={{ fontSize: 45, color: "#1976d2" }} />
+          <Typography
+            fontWeight="bold"
+            color="primary"
+            sx={{ mt: 1, fontSize: 25 }}
+          >
+            Fintrack
+          </Typography>
+        </div>
         <Box textAlign="center" mb={3}>
           <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
             Sign in to manage your finances

@@ -34,7 +34,6 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
-    setIsLoading(true);
     const isFormInvalid = Object.values(form).some((value) => !value);
     if (isFormInvalid) {
       setError("Please fill out all the fields.");
@@ -53,10 +52,12 @@ const SignUp = () => {
       return;
     }
 
+    setIsLoading(true);
+
     try {
       const { confirmPassword, ...payload } = form;
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/users/register`,
+        `${import.meta.env.VITE_API_BASE_URL_DEV}/users/register`,
         {
           ...payload,
           age: Number(payload.age),
@@ -107,6 +108,16 @@ const SignUp = () => {
 
       {/* Form */}
       <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400 }}>
+        <div className="flex items-center justify-center md:hidden">
+          <QueryStatsIcon sx={{ fontSize: 45, color: "#1976d2" }} />
+          <Typography
+            fontWeight="bold"
+            color="primary"
+            sx={{ mt: 1, fontSize: 25 }}
+          >
+            Fintrack
+          </Typography>
+        </div>
         <Box textAlign="center" mb={3}>
           <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
             Create your account to start tracking your finances.

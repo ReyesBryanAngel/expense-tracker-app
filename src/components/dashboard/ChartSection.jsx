@@ -1,6 +1,6 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 import { Box, Paper } from "@mui/material";
-import TimeRange from "../components/TimeRange";
+import TimeRange from "../dashboard/TimeRange";
 
 const ChartSection = ({ transactions, filter, handleFilterChange }) => {
   const monthsSet = new Set();
@@ -64,7 +64,7 @@ const ChartSection = ({ transactions, filter, handleFilterChange }) => {
             scaleType: "time",
             data: months,
             valueFormatter: (date) =>
-              date.toLocaleString("default", { month: "short" }),
+              `${String(date.getMonth() + 1).padStart(2, "0")}/25`,
           }]}
           margin={{ left: 50, right: 20, top: 30, bottom: 30 }}
           grid={{ vertical: true, horizontal: true }}

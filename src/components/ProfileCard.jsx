@@ -100,10 +100,9 @@ const ProfileCard = ({ profileInfo }) => {
         </div>
 
       </div>
-      <Box sx={{ mx: 9, py: 2 }}>
-
-        <Grid container spacing={2} mt={2}>
-          <Grid item xs={6}>
+      <Box sx={{ px: { xs: 2, md: 6 }, py: 2 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
             <TextField
               label="First Name"
               value={profileInfo?.firstName}
@@ -111,19 +110,37 @@ const ProfileCard = ({ profileInfo }) => {
               fullWidth
               InputProps={{ readOnly: true }}
             />
-
           </Grid>
-          <Grid item xs={6}>
-            <TextField label="Last Name" value={profileInfo?.lastName} fullWidth InputProps={{ readOnly: true }} variant="standard" />
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Last Name"
+              value={profileInfo?.lastName}
+              variant="standard"
+              fullWidth
+              InputProps={{ readOnly: true }}
+            />
           </Grid>
-          <Grid item xs={6}>
-            <TextField label="Age" value={profileInfo?.age} fullWidth InputProps={{ readOnly: true }} variant="standard" />
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Age"
+              value={profileInfo?.age}
+              variant="standard"
+              fullWidth
+              InputProps={{ readOnly: true }}
+            />
           </Grid>
-          <Grid item xs={6}>
-            <TextField label="Phone Number" value={profileInfo?.phoneNumber} fullWidth InputProps={{ readOnly: true }} variant="standard" />
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Phone Number"
+              value={profileInfo?.phoneNumber}
+              variant="standard"
+              fullWidth
+              InputProps={{ readOnly: true }}
+            />
           </Grid>
         </Grid>
       </Box>
+
     </>
 
   );

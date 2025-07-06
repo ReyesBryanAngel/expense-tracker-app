@@ -1,28 +1,19 @@
-import { useState, useMemo, useEffect } from "react";
-import { Container, Typography, Box, Button, Paper } from "@mui/material";
+import { useState, useMemo, useContext } from "react";
+import { Container, Typography, Box, Paper } from "@mui/material";
 import TransactionForm from "../components/TransactionForm";
-import ChartSection from "../components/ChartSection";
-import TransactionTable from "../components/TransactionTable";
-import AddIcon from "@mui/icons-material/Add";
-import TotalCalculation from "../components/TotalCalculation";
+import ChartSection from "../components/dashboard/ChartSection";
+import TotalCalculation from "../components/dashboard/TotalCalculation";
 import { PieChart } from "@mui/x-charts";
 import { categoryColors } from "../utils/constants";
-import Avatar from "../components/Avatar";
 import NoTransactionsPlaceholder from "../components/NoTransactionPlaceholder";
 import useFetchTransactions from "../hooks/useFetchTransactions";
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import DashboardSkeleton from "../components/DashboardSkeleton";
-import Footer from "../components/Footer";
-import { useUserActivity } from "../utils/userActivity";
-import { useLocation, useNavigate } from "react-router-dom";
+import DashboardSkeleton from "../components/dashboard/DashboardSkeleton";
+import { GlobalDataContext } from "../contexts/globalData";
 
-const Dashboard = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const DashboardPage = () => {
   const { transactions, isPending } = useFetchTransactions();
+  const { isTransactionModalOpen, setIsTransactionModalOpen } = useContext(GlobalDataContext);
   const [filter, setFilter] = useState("30d");
-  const location = useLocation();
-  const navigate = useNavigate();
-  useUserActivity(840000, navigate, location)
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -139,54 +130,26 @@ const Dashboard = () => {
   }, [transactions]);
 
   return (
-    <>
-      <div className={`fixed w-full top-0 bg-white left-1/2 transform -translate-x-1/2 z-10 pr-5 h-16`}>
-        <Box sx={{ display: "flex", alignContent: "center", justifyContent: "space-between", alignItems: "center", height: "100%" }}>
-          <Typography variant="h6" fontWeight="bold" color="primary" sx={{ ml: 2 }}>
-            <QueryStatsIcon fontSize="large" color="primary" />
-            Fintrack
-          </Typography>
-          <Avatar />
-        </Box>
-      </div>
+    <Box sx={{ mt: 5 }}>
       <TransactionForm
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        isModalOpen={isTransactionModalOpen}
+        setIsModalOpen={setIsTransactionModalOpen}
       />
 
       {isPending && !transactions ? (
         <DashboardSkeleton />
       ) : transactions && transactions?.length === 0 ? (
-        <NoTransactionsPlaceholder onAddTransaction={() => setIsModalOpen(true)} />
+        <NoTransactionsPlaceholder onAddTransaction={() => setIsTransactionModalOpen(true)} />
       ) : (
         <Box
-          bgcolor="#e3f2fd"
           sx={{
-            
-            // background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
-            minHeight: "100vh",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}>
-          <Container sx={{ py: 12 }}>
-            <div className="flex flex-col lg:flex-row items-start gap-5 justify-between items-center">
-              <Typography variant="h5" color="textSecondary">
-                Financial Dashboard
-              </Typography>
-              <Button
-                onClick={() => setIsModalOpen(true)}
-                variant="contained"
-                startIcon={<AddIcon />}
-                sx={{
-                  textTransform: "none"
-                }}
-              >
-                Add Transaction
-              </Button>
-            </div>
+          <Container>
             <div className="flex flex-col gap-20">
-              <div className="mt-3">
+              <div className="">
                 <TotalCalculation
                   totalIncome={totalIncome}
                   incomeChange={incomeChange}
@@ -197,9 +160,9 @@ const Dashboard = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
                 <div className="col-span-2">
-                  <div className="h-full">
+                  <div>
                     <ChartSection
                       transactions={getFilteredTransactions()}
                       filter={filter}
@@ -211,12 +174,12 @@ const Dashboard = () => {
                   <Paper
                     elevation={3}
                     sx={{
-                      height: 455,
-                      padding: 2,
+                      height: '90%',
+                      padding: 3,
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: "space-evenly",
                       overflow: "auto",
+
                       position: 'relative'
                     }}
                   >
@@ -229,7 +192,7 @@ const Dashboard = () => {
                         Expense Breakdown
                       </Typography>
                       <PieChart
-                        sx={{ mt: 2 }}
+                        sx={{ mt: 5 }}
                         series={[
                           {
                             data: expenseBreakdownData.map(
@@ -246,7 +209,7 @@ const Dashboard = () => {
                       />
                     </div>
 
-                    <div className="space-y-2 text-sm text-gray-700 text-center">
+                    <div className="space-y-2 text-sm text-center">
                       {expenseBreakdownData.map((item) => (
                         <div
                           key={item.id}
@@ -269,15 +232,11 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <Box mt={20}>
-              <TransactionTable transactions={transactions} setIsModalOpen={setIsModalOpen} />
-            </Box>
           </Container>
         </Box>
       )}
-      <Footer />
-    </>
+    </Box>
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

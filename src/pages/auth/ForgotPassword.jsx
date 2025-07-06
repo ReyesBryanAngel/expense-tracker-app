@@ -17,7 +17,7 @@ const ForgotPassword = () => {
 
         try {
             setIsLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/forgot-password`, { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/forgot-password`, { email });
             if (response?.data?.code === 200) {
                 toast.success(response?.data?.message);
             }
@@ -59,6 +59,16 @@ const ForgotPassword = () => {
             </Box>
 
             <Paper elevation={4} sx={{ borderRadius: 4, p: 4, width: 400 }}>
+                <div className="flex items-center justify-center md:hidden">
+                    <QueryStatsIcon sx={{ fontSize: 45, color: "#1976d2" }} />
+                    <Typography
+                        fontWeight="bold"
+                        color="primary"
+                        sx={{ mt: 1, fontSize: 25 }}
+                    >
+                        Fintrack
+                    </Typography>
+                </div>
                 <Box textAlign="center" mb={3}>
                     <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
                         Enter your email to reset your password.

@@ -20,8 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from "@mui/icons-material/Logout";
 import 'dayjs/locale/en';
 import { jwtDecode } from "jwt-decode";
-import { getInitials } from '../utils/globalFunctions';
-import ProfileCard from './ProfileCard';
+import { getInitials } from '../../utils/globalFunctions';
+import ProfileCard from '../ProfileCard';
 
 
 const Avatar = () => {

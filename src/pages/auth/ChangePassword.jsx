@@ -38,7 +38,7 @@ const ChangePassword = () => {
 
         try {
             setIsLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/change-password`, payload);
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/change-password`, payload);
             if (response?.data?.code === 200) {
                 toast.success(response?.data?.message);
                 setTimeout(() => {

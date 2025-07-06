@@ -6,15 +6,13 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
     return (
         <Box
-            bgcolor="#e3f2fd"
+
             sx={{
                 textAlign: "center",
-                // mt: 10,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                // background: "linear-gradient(to bottom right, #eef3fd, #e6eaff)",
                 minHeight: "100vh",
             }}
         >
@@ -22,7 +20,6 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
                 sx={{
                     width: 100,
                     height: 100,
-                    backgroundColor: "#e6ebff",
                     borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
@@ -33,7 +30,7 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
                 <MonetizationOnIcon sx={{ fontSize: 40 }} color="primary" />
             </Box>
 
-            <Typography variant="h5" fontWeight="bold" gutterBottom>
+            <Typography variant="h5" fontWeight="bold" gutterBottom color="primary">
                 No Transactions Yet
             </Typography>
 
@@ -44,19 +41,15 @@ const NoTransactionsPlaceholder = ({ onAddTransaction }) => {
 
             <Button
                 size="large"
+                color="primary"
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={onAddTransaction}
                 sx={{
-                    // background: "linear-gradient(135deg, #6B4EFF 0%, #A074FF 100%)",
-                    color: "#fff",
                     fontWeight: "bold",
                     px: 3,
                     borderRadius: "8px",
                     textTransform: "none",
-                    // "&:hover": {
-                    //     background: "linear-gradient(135deg, #5a3ee6 0%, #905cf8 100%)",
-                    // },
                 }}
             >
                 Add Your First Transaction
