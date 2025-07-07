@@ -129,7 +129,7 @@ const useTransactionColumns = (setIsTransactionModalOpen) => {
       type: "date",
       sortable: true,
       valueFormatter: (params) =>
-        dayjs(params).format("MMMM DD, YYYY h:mm A"),
+        dayjs(params).tz('Asia/Manila').format("MMMM DD, YYYY h:mm A"),
     },
     {
       field: "action",

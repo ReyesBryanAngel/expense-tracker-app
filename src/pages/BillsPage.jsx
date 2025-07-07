@@ -11,7 +11,12 @@ import { toast } from 'react-toastify'
 import { deleteBill, updateBill } from '../services/bills'
 import DynamicModal from '../components/DynamicModal'
 import { createTransaction } from '../services/transactions'
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const BillsPage = () => {
     const { billForm, isBillModalOpen, setIsBillModalOpen, form } = useContext(GlobalDataContext);

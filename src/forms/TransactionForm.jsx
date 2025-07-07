@@ -18,8 +18,13 @@ import { createTransaction, updateTransaction } from "../services/transactions";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from "react-toastify";
 import { GlobalDataContext } from "../contexts/globalData";
-import dayjs from "dayjs";
 import DynamicModal from "../components/DynamicModal";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
   const [transactionType, setTransactionType] = useState(null);
@@ -69,6 +74,7 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('form:', form)
     const isFormInvalid = Object.entries(form).some(
       ([key, value]) => value === "" || value === null || value === undefined
     );
@@ -208,17 +214,18 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
             label="Transaction Date & Time"
             value={
               transactionDate && dayjs(transactionDate).isValid()
-                ? dayjs(transactionDate)
+                ? dayjs(transactionDate).tz('Asia/Manila', true)
                 : form.date && dayjs(form.date).isValid()
-                  ? dayjs(form.date)
+                  ? dayjs(form.date).tz('Asia/Manila', true)
                   : null
             }
             onChange={(newDate) => {
               setTransactionDate(newDate);
               setForm((prev) => ({
                 ...prev,
-                date: newDate ? newDate.format("YYYY-MM-DDTHH:mm:ss") : null,
+                date: newDate ? dayjs(newDate).tz('Asia/Manila', true).format('YYYY-MM-DDTHH:mm:ss') : null,
               }));
+
               setError("");
             }}
             slotProps={{ textField: { size: "small" } }}

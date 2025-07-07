@@ -104,13 +104,12 @@ const useBillsColumns = (setIsBillModalOpen, setIsPayModalOpen) => {
             type: "date",
             sortable: true,
             valueFormatter: (params) =>
-                dayjs(params).format("MMMM DD, YYYY h:mm A"),
+                dayjs(params).tz('Asia/Manila').format("MMMM DD, YYYY h:mm A"),
         },
         {
             field: "status",
             headerName: "Bill Status",
             flex: 1,
-            type: "date",
             sortable: true,
             renderCell: ({ row }) => {
                 const status = formulateBillStatus(row);
