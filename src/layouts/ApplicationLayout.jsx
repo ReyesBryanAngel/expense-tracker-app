@@ -1,20 +1,16 @@
-import { Box, Toolbar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useNavigate, useLocation } from "react-router-dom";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import DescriptionIcon from "@mui/icons-material/Description";
-import PersonIcon from '@mui/icons-material/Person';
 import { SidebarFooter } from "../components/SidebarFooter";
-import SecurityIcon from '@mui/icons-material/Security';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { UserProfile } from "../components/UserProfile";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useUserActivity } from "../hooks/userActivity";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
 
 const ApplicationLayout = ({ children }) => {
     const location = useLocation();
@@ -23,7 +19,6 @@ const ApplicationLayout = ({ children }) => {
     const parsedToken = JSON.parse(token)
     const decodedToken = jwtDecode(parsedToken)
     const timeUntilExpiry = (decodedToken.exp * 1000) - Date.now();
-    useEffect(() => { console.log('timeUntilExpiry:', timeUntilExpiry) }, [timeUntilExpiry])
     useUserActivity(timeUntilExpiry, navigate, location)
     const NAVIGATION = [
         { segment: "dashboard", title: "Dashboard", icon: <BarChartIcon /> },

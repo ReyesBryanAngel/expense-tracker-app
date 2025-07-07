@@ -57,6 +57,8 @@ export const frequency = [
   "Monthly",
   "Yearly",
   "One-time",
+  "Weekly", 
+  "Daily"
 ]
 
 export const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&_*])(?=.*\d).{8,}$/;

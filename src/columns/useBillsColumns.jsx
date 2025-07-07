@@ -15,6 +15,39 @@ const useBillsColumns = (setIsBillModalOpen) => {
         setIsEditMode(true)
     }
 
+    const isReminderDue = (row) => {
+        const now = dayjs();
+        const due = dayjs(row.dueDate);
+
+        switch (row.frequency) {
+            case "Daily":
+                return due.diff(now, "hour") <= 3 && due.isAfter(now);
+            case "Weekly":
+                return due.diff(now, "day") <= 1 && due.isAfter(now);
+            case "Monthly":
+                return due.diff(now, "day") <= 3 && due.isAfter(now);
+            case "Yearly":
+                return due.diff(now, "month") <= 1 && due.isAfter(now);
+            default:
+                return false;
+        }
+    };
+
+
+    function formulateBillStatus(row) {
+        const now = dayjs();
+        switch (true) {
+            case row.isPaid:
+                return "Paid";
+            case isReminderDue(row):
+                return "Bill Approaching"
+            case now.isAfter(row.dueDate):
+                return "Overdue"
+            default:
+                break;
+        }
+    }
+
     const columns = [
         {
             field: "name",
@@ -28,7 +61,6 @@ const useBillsColumns = (setIsBillModalOpen) => {
             sortable: true,
             flex: 1,
             renderCell: ({ row }) => {
-                const moneyColor = row.type === "expense" ? "error" : "success";
                 return (
                     <Box
                         sx={{
@@ -37,8 +69,7 @@ const useBillsColumns = (setIsBillModalOpen) => {
                             height: "100%",
                         }}
                     >
-                        <Typography color={moneyColor}>
-                            <span>{row.type === "expense" ? "-" : "+"}</span>&nbsp;
+                        <Typography>
                             {row?.amount?.toLocaleString("en-PH", {
                                 style: "currency",
                                 currency: "PHP",
@@ -48,7 +79,7 @@ const useBillsColumns = (setIsBillModalOpen) => {
                 );
             },
         },
-         {
+        {
             field: "frequency",
             headerName: "Frequency",
             sortable: true,
@@ -64,20 +95,65 @@ const useBillsColumns = (setIsBillModalOpen) => {
                 dayjs(params).format("MMMM DD, YYYY h:mm A"),
         },
         {
-            field: "date",
-            headerName: "Date",
+            field: "status",
+            headerName: "Bill Status",
             flex: 1,
             type: "date",
             sortable: true,
-            valueFormatter: (params) =>
-                dayjs(params).format("MMMM DD, YYYY h:mm A"),
+            renderCell: ({ row }) => {
+                const status = formulateBillStatus(row);
+
+                const getStatusColor = () => {
+                    switch (status) {
+                        case "Paid":
+                            return {
+                                color: "success.main",
+                                bgcolor: "success.light",
+                            };
+                        case "Bill Approaching":
+                            return {
+                                color: "warning.main",
+                                bgcolor: "warning.light",
+                            };
+                        case "Overdue":
+                            return {
+                                color: "error.main",
+                                bgcolor: "error.light",
+                            };
+                        default:
+                            return {
+                                color: "text.primary",
+                                bgcolor: "transparent",
+                            };
+                    }
+                };
+
+                const { color, bgcolor } = getStatusColor();
+
+                return (
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            px: 1.5,
+                            py: 0.5,
+                            borderRadius: 8,
+                            fontWeight: 500,
+                            bgcolor,
+                            color: '#fff',
+                            display: "inline-block",
+                            textAlign: "center",
+                        }}
+                    >
+                        {status}
+                    </Typography>
+                );
+            },
         },
         {
             field: "action",
             flex: 1,
             headerName: "",
             sortable: false,
-            type: "date",
             renderCell: ({ row }) => {
 
                 return (
