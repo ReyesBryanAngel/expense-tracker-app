@@ -16,6 +16,7 @@ export const GlobalDataProvider = ({ children }) => {
     amount: "",
     frequency: "",
     dueDate: "",
+    isPaid: false
   });
   const [profileInfo, setProfileInfo] = useState({
     email: "",

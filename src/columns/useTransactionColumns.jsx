@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Tooltip, IconButton } from "@mui/material";
 import WalletIcon from "@mui/icons-material/Wallet";
 import { categoryTextColor } from "../utils/constants";
 import EditIcon from "@mui/icons-material/Edit";
@@ -140,12 +140,21 @@ const useTransactionColumns = (setIsTransactionModalOpen) => {
       renderCell: ({ row }) => {
 
         return (
-          <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 2 }}>
-            <EditIcon color="primary" sx={{ cursor: "pointer" }} onClick={() => handleOpenForm(row)} />
-            <DeleteIcon color="error" sx={{ cursor: "pointer" }} onClick={() => {
-              setTransactionId(row?._id);
-              setIsDeleteModalOpen(true);
-            }} />
+          <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 1 }}>
+            <Tooltip title="Edit Transaction">
+              <IconButton color="primary" onClick={() => handleOpenForm(row)}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Delete Transaction">
+              <IconButton color="error" onClick={() => {
+                setTransactionId(row?._id);
+                setIsDeleteModalOpen(true);
+              }}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         );
       },

@@ -106,6 +106,7 @@ const TransactionForm = ({ isModalOpen, setIsModalOpen }) => {
 
           }}
           onClick={handleSubmit}
+          size="small"
         >
           {createMutation.isPending ? (
             <CircularProgress size={24} />

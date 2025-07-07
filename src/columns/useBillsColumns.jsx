@@ -1,18 +1,27 @@
 import dayjs from "dayjs";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalDataContext } from "../contexts/globalData";
 import { useContext, useState } from "react";
+import PaymentIcon from '@mui/icons-material/Payment';
 
-const useBillsColumns = (setIsBillModalOpen) => {
-    const { setBillForm, setIsEditMode } = useContext(GlobalDataContext);
+
+const useBillsColumns = (setIsBillModalOpen, setIsPayModalOpen) => {
+    const { setBillForm, setIsEditMode, setForm } = useContext(GlobalDataContext);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [billId, setBillId] = useState(null);
+
     const handleOpenForm = (row) => {
         setBillForm(row);
         setIsBillModalOpen(true);
         setIsEditMode(true)
+    }
+
+    const handlePayBill = (row) => {
+        setBillForm(row);
+        setForm((prev) => ({ ...prev, amount: row?.amount }));
+        setIsPayModalOpen(true);
     }
 
     const isReminderDue = (row) => {
@@ -36,13 +45,16 @@ const useBillsColumns = (setIsBillModalOpen) => {
 
     function formulateBillStatus(row) {
         const now = dayjs();
+        const due = dayjs(row.dueDate);
         switch (true) {
             case row.isPaid:
                 return "Paid";
             case isReminderDue(row):
                 return "Bill Approaching"
             case now.isAfter(row.dueDate):
-                return "Overdue"
+                return "Overdue";
+            case now.isSame(due, "day"):
+                return "Pay Day";
             default:
                 break;
         }
@@ -106,27 +118,18 @@ const useBillsColumns = (setIsBillModalOpen) => {
                 const getStatusColor = () => {
                     switch (status) {
                         case "Paid":
-                            return {
-                                color: "success.main",
-                                bgcolor: "success.light",
-                            };
+                            return { color: "success.main", bgcolor: "success.light" };
+                        case "Pay Day":
+                            return { color: "primary.main", bgcolor: "primary.light" };
                         case "Bill Approaching":
-                            return {
-                                color: "warning.main",
-                                bgcolor: "warning.light",
-                            };
+                            return { color: "warning.main", bgcolor: "warning.light" };
                         case "Overdue":
-                            return {
-                                color: "error.main",
-                                bgcolor: "error.light",
-                            };
+                            return { color: "error.main", bgcolor: "error.light" };
                         default:
-                            return {
-                                color: "text.primary",
-                                bgcolor: "transparent",
-                            };
+                            return { color: "text.primary", bgcolor: "transparent" };
                     }
                 };
+
 
                 const { color, bgcolor } = getStatusColor();
 
@@ -157,12 +160,33 @@ const useBillsColumns = (setIsBillModalOpen) => {
             renderCell: ({ row }) => {
 
                 return (
-                    <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 2 }}>
-                        <EditIcon color="primary" sx={{ cursor: "pointer" }} onClick={() => handleOpenForm(row)} />
-                        <DeleteIcon color="error" sx={{ cursor: "pointer" }} onClick={() => {
-                            setBillId(row?._id);
-                            setIsDeleteModalOpen(true);
-                        }} />
+                    <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: 1 }}>
+                        <Tooltip title="Edit Bill">
+                            <IconButton color="primary" onClick={() => handleOpenForm(row)}>
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Delete Bill">
+                            <IconButton color="error" onClick={() => {
+                                setBillId(row?._id);
+                                setIsDeleteModalOpen(true);
+                            }}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Pay Now">
+                            <IconButton color="success"
+                                disabled={row?.isPaid}
+                                onClick={() => {
+                                    setBillId(row?._id);
+                                    handlePayBill(row)
+                                }}
+                            >
+                                <PaymentIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
                 );
             },

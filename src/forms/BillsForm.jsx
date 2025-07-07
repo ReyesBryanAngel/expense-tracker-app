@@ -64,7 +64,6 @@ const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('billForm:', billForm)
         const isFormInvalid = Object.entries(billForm).some(
             ([key, value]) => value === "" || value === null || value === undefined
         );
@@ -98,10 +97,11 @@ const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
                     sx={{
                         textTransform: "none",
                         background: "#1976d2",
-                        color: '#fff'
+                        color: '#fff',
 
                     }}
                     onClick={handleSubmit}
+                    size='small'
                 >
                     {createMutation.isPending ? (
                         <CircularProgress size={24} />

@@ -49,7 +49,7 @@ const TransactionPage = () => {
             title="Delete Confirmation"
             actions={
               <>
-                <Button onClick={() => setIsDeleteModalOpen(false)} color="inherit">
+                <Button onClick={() => setIsDeleteModalOpen(false)} color="inherit" sx={{ textTransform: 'none' }} size="small">
                   Cancel
                 </Button>
                 <Button
@@ -60,6 +60,7 @@ const TransactionPage = () => {
                   }}
                   color="error"
                   variant="contained"
+                  sx={{ textTransform: 'none' }} size="small"
                 >
                   Delete
                 </Button>

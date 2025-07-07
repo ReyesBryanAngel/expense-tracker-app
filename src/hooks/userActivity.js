@@ -5,20 +5,23 @@ export const useUserActivity = (timeUntilExpiry, navigate, location) => {
     const [isActive, setIsActive] = useState(true);
     const timeoutRef = useRef(null);
     const refreshRef = useRef(null);
+    const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes
 
     const logout = () => {
         setIsActive(false);
+        clearInterval(refreshRef.current); // ⬅️ ensure refresh stops
         navigate("/");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
     };
+
 
     const resetInactivityTimer = () => {
         setIsActive(true);
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
             logout();
-        }, timeUntilExpiry);
+        }, INACTIVITY_TIMEOUT);
     };
 
     useEffect(() => {
