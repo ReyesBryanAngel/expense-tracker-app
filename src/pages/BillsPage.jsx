@@ -79,7 +79,7 @@ const BillsPage = () => {
                                 const transactionPayload = {
                                     ...form,
                                     category: "Bill",
-                                    date: dayjs().toDate(),
+                                    date: dayjs().tz('Asia/Manila', true).toDate(),
                                     type: "expense",
                                     description: `Payment for ${billForm.name}`
                                 }
