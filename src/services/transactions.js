@@ -4,7 +4,7 @@ import { apiRequest } from "../utils/globalFunctions";
 export const getTransactions = async () => {
     return await apiRequest(async (token) => {
         const response = await axios.get(
-            `${import.meta.env.VITE_API_BASE_URL_DEV}/users/transactions`,
+            `${import.meta.env.VITE_API_BASE_URL_PROD}/users/transactions`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -17,7 +17,7 @@ export const getTransactions = async () => {
 
 export const createTransaction = async (transaction) => {
     return await apiRequest(async (token) => {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/transaction`, transaction, {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/transaction`, transaction, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -28,7 +28,7 @@ export const createTransaction = async (transaction) => {
 
 export const updateTransaction = async (transaction) => {
     return await apiRequest(async (token) => {
-        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/transaction/${transaction._id}`, transaction, {
+        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/transaction/${transaction._id}`, transaction, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -39,7 +39,7 @@ export const updateTransaction = async (transaction) => {
 
 export const deleteTransaction = async (transactionId) => {
     return await apiRequest(async (token) => {
-        const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/transaction/${transactionId}`, {
+        const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/transaction/${transactionId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

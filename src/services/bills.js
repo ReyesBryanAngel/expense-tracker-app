@@ -3,7 +3,7 @@ import { apiRequest } from "../utils/globalFunctions";
 
 export const createBill = async (bill) => {
     return await apiRequest(async (token) => {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/billing`, bill, {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/billing`, bill, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -14,7 +14,7 @@ export const createBill = async (bill) => {
 
 export const updateBill = async (bill) => {
     return await apiRequest(async (token) => {
-        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/billing/${bill._id}`, bill, {
+        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/billing/${bill._id}`, bill, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -26,7 +26,7 @@ export const updateBill = async (bill) => {
 export const getBills = async () => {
     return await apiRequest(async (token) => {
         const response = await axios.get(
-            `${import.meta.env.VITE_API_BASE_URL_DEV}/users/billings`,
+            `${import.meta.env.VITE_API_BASE_URL_PROD}/users/billings`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export const getBills = async () => {
 
 export const deleteBill = async (billId) => {
     return await apiRequest(async (token) => {
-        const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/billing/${billId}`, {
+        const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/billing/${billId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

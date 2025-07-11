@@ -12,7 +12,7 @@ export const refreshToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
     const parsedRefreshToken = JSON.parse(refreshToken);
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/refresh-token`, { refreshToken: parsedRefreshToken });
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/refresh-token`, { refreshToken: parsedRefreshToken });
         localStorage.setItem("accessToken", JSON.stringify(response?.data?.accessToken));
         localStorage.setItem("refreshToken", JSON.stringify(response?.data?.refreshToken));
         return response.data;

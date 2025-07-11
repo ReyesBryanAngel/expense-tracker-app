@@ -72,7 +72,7 @@ const TransactionPage = () => {
             </Typography>
           </DynamicModal>
 
-          <Box sx={{ width: "90%", height: 650, position: 'relative' }}>
+          <Box sx={{ width: "90%", height: 600, position: 'relative' }}>
             <IconButton
               size="small"
               sx={{

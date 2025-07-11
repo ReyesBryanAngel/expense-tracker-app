@@ -57,7 +57,7 @@ const SignUp = () => {
     try {
       const { confirmPassword, ...payload } = form;
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL_DEV}/users/register`,
+        `${import.meta.env.VITE_API_BASE_URL_PROD}/users/register`,
         {
           ...payload,
           age: Number(payload.age),

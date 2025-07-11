@@ -53,9 +53,9 @@ const ChartSection = ({ transactions, filter, handleFilterChange }) => {
   return (
     <Paper elevation={3} sx={{ px: 2, py: 2 }}>
       <TimeRange filter={filter} handleFilterChange={handleFilterChange} />
-      <Box sx={{ width: "100%", minHeight: 325 }}>
+      <Box sx={{ width: "90%", minHeight: 325 }}>
         <LineChart
-          height={325}
+          height={300}
           series={[
             { data: incomeData, label: "Income", color: "#3f51b5" },
             { data: expenseData, label: "Expenses", color: "#f9a825" },

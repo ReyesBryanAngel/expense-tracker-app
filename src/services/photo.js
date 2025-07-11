@@ -5,7 +5,7 @@ export const uploadPhoto = async (file) => {
         const formData = new FormData();
         formData.append('photo', file);
 
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/upload-photo`, formData, {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/upload-photo`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`,
@@ -17,7 +17,7 @@ export const uploadPhoto = async (file) => {
 
 export const getPhoto = async () => {
   return apiRequest(async (token) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/get-photo`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/get-photo`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },

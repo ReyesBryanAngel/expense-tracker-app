@@ -33,7 +33,7 @@ const Login = () => {
       setError("Please enter email and password.");
       return;
     }
-    axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/login`, { email: email, password: password }).then((response) => {
+    axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/login`, { email: email, password: password }).then((response) => {
       setIsLoading(true)
       if (response?.data?.code === 200) {
         localStorage.setItem('accessToken', JSON.stringify(response?.data?.accessToken));

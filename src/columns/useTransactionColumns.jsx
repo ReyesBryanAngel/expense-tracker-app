@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { Box, Typography, Tooltip, IconButton } from "@mui/material";
 import WalletIcon from "@mui/icons-material/Wallet";
 import { categoryTextColor } from "../utils/constants";
@@ -129,7 +129,7 @@ const useTransactionColumns = (setIsTransactionModalOpen) => {
       type: "date",
       sortable: true,
       valueFormatter: (params) =>
-        dayjs(params).tz('Asia/Manila').format("MMMM DD, YYYY h:mm A"),
+       dayjs(params).format("MMMM DD, YYYY h:mm A"),
     },
     {
       field: "action",

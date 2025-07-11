@@ -104,7 +104,7 @@ const useBillsColumns = (setIsBillModalOpen, setIsPayModalOpen) => {
             type: "date",
             sortable: true,
             valueFormatter: (params) =>
-                dayjs(params).tz('Asia/Manila').format("MMMM DD, YYYY h:mm A"),
+                dayjs(params).format("MMMM DD, YYYY h:mm A"),
         },
         {
             field: "status",

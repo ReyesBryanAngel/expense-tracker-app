@@ -17,7 +17,7 @@ const ForgotPassword = () => {
 
         try {
             setIsLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_DEV}/users/forgot-password`, { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL_PROD}/users/forgot-password`, { email });
             if (response?.data?.code === 200) {
                 toast.success(response?.data?.message);
             }

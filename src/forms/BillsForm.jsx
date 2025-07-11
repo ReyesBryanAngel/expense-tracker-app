@@ -1,10 +1,6 @@
 import { useState, useContext } from "react";
 import {
     TextField,
-    Typography,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
     Autocomplete,
     Button,
     CircularProgress
@@ -18,14 +14,8 @@ import { GlobalDataContext } from "../contexts/globalData";
 import DynamicModal from "../components/DynamicModal";
 import { createBill, updateBill } from "../services/bills";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc.js";
-import timezone from "dayjs/plugin/timezone.js";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
-    const [dueDate, setDueDate] = useState(null);
     const [error, setError] = useState("");
     const { billForm, setBillForm, isEditMode, setIsEditMode } = useContext(GlobalDataContext);
 
@@ -36,7 +26,6 @@ const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
             frequency: "",
             dueDate: "",
         });
-        setDueDate(null);
         setError("");
         setIsEditMode(false);
         setIsModalOpen(false);
@@ -115,7 +104,6 @@ const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
                     )}
                 </Button>
             }
-        // title={}
         >
             <div className="flex flex-col gap-5 mt-10">
                 <div>
@@ -177,18 +165,16 @@ const BillsForm = ({ isModalOpen, setIsModalOpen }) => {
                         sx={{ width: '100%' }}
                         label="Due Date"
                         value={
-                            dueDate && dayjs(dueDate).isValid()
-                                ? dayjs(dueDate).tz('Asia/Manila', true)
-                                : billForm.dueDate && dayjs(billForm.dueDate).isValid()
-                                    ? dayjs(billForm.dueDate).tz('Asia/Manila', true)
-                                    : null
+                            billForm.dueDate && dayjs(billForm.dueDate).isValid()
+                                ? dayjs(billForm.dueDate)
+                                : null
                         }
                         onChange={(newDate) => {
-                            setDueDate(newDate);
                             setBillForm((prev) => ({
                                 ...prev,
-                                dueDate: newDate ? dayjs(newDate).tz('Asia/Manila', true).format('YYYY-MM-DDTHH:mm:ss') : null,
+                                dueDate: newDate ? dayjs(newDate).toISOString() : null,
                             }));
+
                             setError("");
                         }}
                         slotProps={{ textField: { size: "small" } }}

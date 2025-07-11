@@ -12,11 +12,6 @@ import { deleteBill, updateBill } from '../services/bills'
 import DynamicModal from '../components/DynamicModal'
 import { createTransaction } from '../services/transactions'
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc.js";
-import timezone from "dayjs/plugin/timezone.js";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const BillsPage = () => {
     const { billForm, isBillModalOpen, setIsBillModalOpen, form } = useContext(GlobalDataContext);
@@ -79,7 +74,7 @@ const BillsPage = () => {
                                 const transactionPayload = {
                                     ...form,
                                     category: "Bill",
-                                    date: dayjs().tz('Asia/Manila', true).toDate(),
+                                    date: dayjs().toISOString(),
                                     type: "expense",
                                     description: `Payment for ${billForm.name}`
                                 }
@@ -133,7 +128,7 @@ const BillsPage = () => {
                     Are you sure you want to delete this Bill?
                 </Typography>
             </DynamicModal>
-            <Box sx={{ width: "90%", height: 650, position: 'relative' }}>
+            <Box sx={{ width: "90%", height: 600, position: 'relative' }}>
                 <IconButton
                     size="small"
                     sx={{

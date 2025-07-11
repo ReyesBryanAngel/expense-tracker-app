@@ -175,6 +175,7 @@ const DashboardPage = () => {
                     elevation={3}
                     sx={{
                       height: '90%',
+                      width: '100%',
                       padding: 3,
                       display: "flex",
                       flexDirection: "column",
